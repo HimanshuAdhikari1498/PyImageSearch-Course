@@ -94,7 +94,7 @@ cv2.imshow("Outline",outline)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-# sort the question contours top-to-bottom, then initialize the total number of correct answers
+# sort the question contours top-to-bottom, then initialize the total number of correct answers and minthresh for checking unanswered question
 questionCnts=contours.sort_contours(questionCnts,method="top-to-bottom")[0]
 correct=0
 minthresh=600
@@ -116,12 +116,13 @@ for (q, i) in enumerate(np.arange(0, len(questionCnts), 5)):
         total = cv2.countNonZero(mask)
         print(total)
         
-        # if the current total has a larger number of total non-zero pixels, then we are examining the currently bubbled-in answer
+        # if total is greater than minthresh and if the current total has a larger number of total non-zero pixels, then we are examining the currently bubbled-in answer
         if total>minthresh and (bubbled is None or total > bubbled[0]):
             bubbled = (total, j)
     
-    # initialize the contour color and the index of the correct answer
+    # if bubbled is not none that is answer is marked
     if bubbled is not None:
+        #initialize the contour color and the index of the correct answer
         color = (0, 0, 255)
         k = Answer_Key[q]
         # check to see if the bubbled answer is correct
